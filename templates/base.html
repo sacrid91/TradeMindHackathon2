@@ -1,0 +1,103 @@
+{% load static%}
+<!--Dark mode Layout-->
+<!-- templates/base.html -->
+<!DOCTYPE html>
+<html lang="en">
+<!-- Load Tailwind or keep our custom CSS -->
+<link rel="stylesheet" href="{% static 'css/style.css' %}">    
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{% block title %}TradeMind{% endblock %}</title>
+
+  <!-- Google Fonts: Poppins + JetBrains Mono -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet"/>
+
+  
+  <!-- Adds chart.js CDN  -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Tailwind via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Poppins', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+        },
+      },
+    };
+  </script>
+
+
+  <!-- Custom Styles -->
+  <style>
+    body {
+      @apply bg-gray-950 text-gray-100 transition-all duration-300;
+      {% if not dark_mode %} background: #f4f6f9; color: #1a1a1a; {% endif %}
+    }
+    .btn-primary {
+      @apply bg-emerald-400 hover:bg-emerald-300 text-gray-900 font-bold py-2 px-6 rounded-full shadow-lg transition-all transform hover:scale-105;
+    }
+    .card {
+      @apply rounded-xl p-6 mb-4 shadow-lg border border-gray-800;
+      {% if dark_mode %}
+        background: #1e293b;
+      {% else %}
+        background: white; @apply shadow-md border border-gray-200;
+      {% endif %}
+    }
+    .emotion-slider label {
+      @apply cursor-pointer text-2xl opacity-60 hover:opacity-100 transition-all;
+    }
+    .emotion-slider input:checked + label {
+      @apply opacity-100 scale-125;
+    }
+  </style>
+</head>
+
+<script src="{% static 'js/main.js' %}" defer></script>
+<script src="{% static 'js/ai.js' %}" defer></script>
+
+<body class="font-sans leading-relaxed min-h-screen">
+  <!-- Header -->
+  <header class="py-4 px-6 bg-gray-900 border-b border-emerald-500/30">
+    <div class="container mx-auto flex justify-between items-center">
+      <h1 class="text-2xl font-bold text-emerald-400 font-mono">TradeMind</h1>
+      {% if user.is_authenticated %}
+        <div class="flex gap-4">
+          <a href="{% url 'trademind_app:dashboard' %}" class="hover:text-emerald-400">Dashboard</a>
+          <!-- In base.html -->
+          <form method="post" action="{% url 'logout' %}" style="display: inline;">
+            {% csrf_token %}
+            <button type="submit" class="text-red-400 hover:text-red-300">Logout</button>
+          </form>
+        </div>
+      {% endif %}
+    </div>
+  </header>
+
+
+  <!-- Main -->
+  <main class="container mx-auto px-4 py-8">
+    {% if messages %}
+      {% for message in messages %}
+        <div class="p-4 mb-4 rounded bg-emerald-500/20 border border-emerald-500 text-emerald-300">
+          {{ message }}
+        </div>
+      {% endfor %}
+    {% endif %}
+
+    {% block content %}{% endblock %}
+  </main>
+
+  
+  <!-- Footer -->
+  <footer class="py-6 text-center text-gray-500 text-sm border-t border-gray-800">
+    <p>TradeMind &copy; {% now "Y" %} | Your Psychee. Your Edge.</p>
+  </footer>
+</body>
+</html>

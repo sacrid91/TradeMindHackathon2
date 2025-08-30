@@ -1,0 +1,122 @@
+<!-- templates/trade_log.html -->
+{% extends "base.html" %}
+
+{% block title %}Log Trade{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto">
+  <div class="card">
+    <h2 class="text-2xl font-bold mb-6">Log a New Trade</h2>
+
+    <form method="post" class="space-y-6">
+      {% csrf_token %}
+
+      <!-- Date & Session -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label>{{ form.date.label }}</label>
+          {{ form.date }}
+        </div>
+        <div>
+          <label>{{ form.session.label }}</label>
+          {{ form.session }}
+        </div>
+      </div>
+
+      <!-- Pair & Entry -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label>{{ form.pair.label }}</label>
+          {{ form.pair }}
+        </div>
+        <div>
+          <label>{{ form.entry.label }}</label>
+          {{ form.entry }}
+        </div>
+      </div>
+
+      <!-- Financials -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label>{{ form.profit.label }}</label>
+          {{ form.profit }}
+        </div>
+        <div>
+          <label>{{ form.loss.label }}</label>
+          {{ form.loss }}
+        </div>
+      </div>
+
+      <!-- Emotions -->
+      <div>
+        <label class="block mb-2 font-medium">{{ form.pre_trade_emotion.label }}</label>
+        <div class="flex justify-around mb-6 emotion-slider">
+          {% for value, text in form.pre_trade_emotion.field.choices %}
+            <div>
+              <input type="radio" name="pre_trade_emotion" value="{{ value }}" id="pre_{{ value }}" required>
+              <label for="pre_{{ value }}">{{ text }}</label>
+            </div>
+          {% endfor %}
+        </div>
+
+        <label class="block mb-2 font-medium">{{ form.post_trade_emotion.label }}</label>
+        <div class="flex justify-around mb-6 emotion-slider">
+          {% for value, text in form.post_trade_emotion.field.choices %}
+            <div>
+              <input type="radio" name="post_trade_emotion" value="{{ value }}" id="post_{{ value }}" required>
+              <label for="post_{{ value }}">{{ text }}</label>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+
+
+      
+      <!-- Rules Followed -->
+      <div class="mb-6">
+        <label class="block mb-2 font-medium">Rules Followed</label>
+
+        {% if form.rules_followed.field.queryset.exists %}
+          <div class="space-y-2 mt-2">
+            {% for rule in form.rules_followed.field.queryset.all %}
+              <label style="display: flex; align-items: center; cursor: pointer; padding: 0.5rem; margin-bottom: 0.25rem; background-color: #1f2937; border-radius: 0.375rem;">
+                <input type="checkbox" 
+                      name="rules_followed" 
+                      value="{{ rule.id }}"
+                      style="width: 1.25rem; height: 1.25rem; margin-right: 0.75rem; accent-color: #10b981; border: 1px solid #4b5563; border-radius: 0.25rem;">
+                <span style="color: white; font-size: 0.875rem;">{{ rule.rule_text }}</span>
+              </label>
+            {% endfor %}
+          </div>
+
+          <p class="text-xs text-purple-500 mt-1">Check all rules you actually followed.</p>
+        {% else %}
+          <p class="text-gray-500">No rules set. 
+            <a href="{% url 'trademind_app:add_rule' %}" class="text-emerald-400">Add one</a>.
+          </p>
+        {% endif %}
+
+        <!-- Add New Rule Inline -->
+        <p class="text-gray-500">Found a backtested Rule? 
+
+          
+          <a href="{% url 'trademind_app:add_rule' %}" class="text-emerald-400">Add one</a>.
+          <br>
+          <br>
+        </p>
+      
+        <p class="text-xs text-gray-400 mt-1">Rule will be saved to your checklist.</p>
+      </div>
+      
+      <!-- Journal -->
+      <div>
+        <label>{{ form.reason.label }}</label>
+        {{ form.reason }}
+      </div>
+
+      <button type="submit" class="btn-primary">Save Trade</button>
+    </form>
+  </div>
+</div>
+
+{% endblock %}        

@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Rule{% endblock %}
+
+{% block content %}
+<div class="max-w-md mx-auto mt-10">
+  <h2 class="text-2xl font-bold mb-6">Edit Rule</h2>
+  
+  <form method="post">
+    {% csrf_token %}
+    <div class="mb-4">
+      <label for="{{ form.rule_text.id_for_label }}" class="block mb-2 font-medium">
+        Rule Text
+      </label>
+      {{ form.rule_text }}
+      {% if form.rule_text.errors %}
+        <div class="text-red-400 text-sm mt-1">{{ form.rule_text.errors }}</div>
+      {% endif %}
+    </div>
+    <button type="submit" class="btn-primary">Update Rule</button>
+  </form>
+  
+  <div class="mt-4 space-x-4">
+    <a href="{% url 'trademind_app:dashboard' %}" class="text-gray-400 hover:text-white">
+      ← Back to Dashboard
+    </a>
+    <a href="{% url 'trademind_app:delete_rule' rule.id %}" class="text-red-400 hover:text-red-300">
+      Delete Rule
+    </a>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,61 @@
+<!-- templates/ai_insight.html -->
+{% extends "base.html" %}
+
+{% block title %}AI Insight{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto">
+  <div class="card">
+    <h2 class="text-2xl font-bold mb-2">AI Insight Coach</h2>
+    <p class="text-sm text-gray-400">Behavioral analysis for {{ trade.pair }} on {{ trade.date }}</p>
+
+    <!-- Insight Card -->
+    <div class="mt-6 p-5 bg-gray-800 rounded-lg border border-emerald-500/30">
+      <p><strong>Insight:</strong> {{ insight.insight }}</p>
+      <p class="mt-3"><strong>Risk Pattern:</strong> {{ insight.risk_pattern }}</p>
+      <p class="mt-3"><strong>Discipline Score:</strong> {{ insight.discipline_score }}/10</p>
+      <p class="mt-3 italic">💡 {{ insight.coaching_tip }}</p>
+    </div>
+
+    <!-- IntaSend JS SDK -->
+    <script src="https://unpkg.com/intasend-inlinejs-sdk@4.0.7/build/intasend-inline.js"></script>
+
+
+    <!-- IntaSend Paywall (Mock) -->
+    <div class="mt-8 p-5 bg-amber-900/30 border border-amber-600 rounded-lg">
+      <h3 class="font-bold text-amber-300">Unlock Full Report</h3>
+      <p class="text-sm">Get PDF export, deep pattern audit, and voice coaching.</p>
+     
+      <!--IntaSend Standard Button -->
+      <button 
+        class="intaSendPayButton mt-3 btn-primary bg-amber-400 hover:bg-amber-300 text-gray-900"
+        data-amount="{{ insight_cost_kes }}"
+        data-currency="KES"
+        data-email="{{ request.user.email }}"
+        data-api-ref="premium_report_{{ trade.id }}"
+        data-redirect-url="{% url 'trademind_app:ai_insight' trade.id %}"
+        data-theme="dark">
+      Pay KES {{ insight_cost_kes }} via IntaSend
+    </button>  
+  </div>
+  </div>
+</div>
+
+<!-- Initialize IntaSend -->
+<script>
+  new window.IntaSend({
+    publicAPIKey: "{{ intasend_public_key }}",
+    live: false
+  })
+  .on("COMPLETE", function (result) {
+    alert("✅ Payment successful! Your full report is being generated.");
+  })
+  .on("FAILED", function (result) {
+    alert("❌ Payment failed: " + (result.message || "Unknown error"));
+  })
+  .on("IN-PROGRESS", function (result) {
+    console.log("Payment in progress:", result);
+  });
+</script>
+
+{% endblock %}

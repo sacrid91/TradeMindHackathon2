@@ -1,0 +1,43 @@
+<!-- templates/landing.html -->
+{% extends "base.html" %}
+
+{% block title %}Your Psychee. Your Edge.{% endblock %}
+
+{% block content %}
+<div class="flex flex-col items-center justify-center text-center py-16 px-4">
+  <!-- Logo/Mascot -->
+  <div class="text-6xl mb-6">🧠</div>
+
+  <!-- Headline -->
+  <h1 class="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-emerald-400 to-cyan-300 bg-clip-text text-transparent">
+    Your Edge Isn’t Just Strategy
+  </h1>
+  <p class="text-xl text-gray-300 mb-8 max-w-2xl">
+    It’s your <strong class="text-emerald-400">Psychee</strong>.<br>
+    Track your trades. Map your emotions. Master your discipline.
+  </p>
+
+  <!-- CTA Button -->
+  <a href="{% url 'trademind_app:signup' %}" class="btn-primary text-lg px-10 py-3 animate-pulse">
+    🔒 LOCK IN
+  </a>
+
+  <!-- Subtext -->
+  <p class="mt-8 text-sm text-gray-500">
+    Join traders mastering their mental game. Built for SDG 3: Good Health & Well-being.
+  </p>
+</div>
+
+<!-- Optional: Animated candlestick background -->
+<div class="fixed inset-0 pointer-events-none opacity-5">
+  <svg class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <pattern id="candlesticks" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+        <path d="M20 5 L20 35" stroke="white" stroke-width="2"/>
+        <rect x="15" y="10" width="10" height="15" fill="green"/>
+      </pattern>
+    </defs>
+    <rect width="100%" height="100%" fill="url(#candlesticks)" />
+  </svg>
+</div>
+{% endblock %}

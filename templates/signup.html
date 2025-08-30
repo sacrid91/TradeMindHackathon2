@@ -1,0 +1,53 @@
+<!-- templates/signup.html -->
+{% extends "base.html" %}
+
+{% block title %}Sign Up{% endblock %}
+
+{% block content %}
+<div class="max-w-md mx-auto">
+  <div class="card">
+    <h2 class="text-2xl font-bold mb-6">Create Your Trader Profile</h2>
+
+    <form method="post">
+      {% csrf_token %}
+      
+      <div class="mb-4">
+        <label class="block mb-2 font-medium">Username</label>
+        {{ form.username }}
+      </div>
+
+      <div class="mb-4">
+        <label class="block mb-2 font-medium">Email</label>
+        {{ form.email }}
+      </div>
+
+      <div class="mb-4">
+        <label class="block mb-2 font-medium">Password</label>
+        {{ form.password1 }}
+        <p class="text-sm text-gray-400 mt-1">{{ form.password1.help_text|safe }}</p>
+      </div>
+
+      <div class="mb-4">
+        <label class="block mb-2 font-medium">Confirm Password</label>
+        {{ form.password2 }}
+      </div>
+
+      <div class="mb-6">
+        <label class="block mb-2 font-medium">Trading Style</label>
+        {% for radio in form.trader_type %}
+          <label class="inline-flex items-center mr-6">
+            {{ radio.tag }}
+            <span class="ml-2">{{ radio.choice_label }}</span>
+          </label>
+        {% endfor %}
+      </div>
+
+      <button type="submit" class="btn-primary w-full">Create Account</button>
+    </form>
+  </div>
+
+  <p class="text-center mt-4 text-sm">
+    Already have an account? <a href="{% url 'login' %}" class="text-emerald-400">Log in</a>
+  </p>
+</div>
+{% endblock %}

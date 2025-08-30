@@ -1,0 +1,121 @@
+<!-- templates/dashboard.html -->
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+  <!-- Stats -->
+  <div class="card">
+    <h3 class="text-xl font-bold mb-4">Your Discipline</h3>
+    <ul class="space-y-2">
+      <li><strong>Total Trades:</strong> {{ total_trades }}</li>
+      <li><strong>Winning Trades:</strong> {{ winning_trades }}</li>
+      <li><strong>Losing Trades:</strong> {{ losing_trades }}</li>
+      <li><strong>Win Rate:</strong> {{ win_rate }}</li>
+    </ul>
+  </div>
+
+
+  <!-- Recent Trades -->
+  <div class="card">
+    <h3 class="text-xl font-bold mb-4">Recent Trades</h3>
+    {% if trades %}
+      <ul class="space-y-3">
+        {% for trade in trades %}
+          <li class="border-b border-gray-700 pb-2">
+            <a href="{% url 'trademind_app:ai_insight' trade.id %}" class="hover:text-emerald-400">
+              {{ trade.pair }} | {{ trade.entry }} | {{ trade.date }}
+            </a>
+            <div class="text-xs text-gray-400">
+              {{ trade.get_pre_trade_emotion_display }} → {{ trade.get_post_trade_emotion_display }}
+            </div>
+          </li>
+        {% endfor %}
+      </ul>
+      <a href="{% url 'trademind_app:trade_log' %}" class="text-emerald-400 text-sm mt-2 inline-block">+ Log New Trade</a>
+    {% else %}
+      <p>No trades yet. <a href="{% url 'trademind_app:trade_log' %}" class="text-emerald-400">Start now</a>.</p>
+    {% endif %}
+  </div>
+</div>
+
+<!-- chart visuals -->
+<div class="card">
+    <h3 class="text-xl font-bold mb-4">Emotion vs. P&L($)</h3>
+    <canvas id="emotionChart" height="100"></canvas>
+  </div>
+  
+  <script>
+    const ctx = document.getElementById('emotionChart').getContext('2d');
+    
+    const data = [-120, -80, -30, 50, 200, 300];
+    const backgroundColor = data.map(value => 
+      value < 0 ? 'rgba(255, 69, 69, 0.5)' : 'rgba(57, 255, 20, 0.5)' // Red for negative, green for positive
+    );
+    const borderColor = data.map(value => 
+      value < 0 ? '#ff4545' : '#39FF14'
+    );
+  
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['Fear', 'Angry', 'Sad', 'Neutral', 'Happy', 'Chill'],
+        datasets: [{
+          label: 'Average P&L ($)',
+          data: data,
+          backgroundColor: backgroundColor,
+          borderColor: borderColor,
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { display: false }
+        },
+        scales: {
+          y: { 
+            beginAtZero: true, 
+            grid: { color: 'rgba(255, 255, 255, 0.1)' } 
+          },
+          x: { grid: { display: false } }
+        }
+      }
+    });
+  </script>
+
+</div>  
+
+<!--Action on existing discpline checklist-->
+<div class="card">
+  <h3 class="text-xl font-bold mb-4">Your Discipline Checklist</h3>
+  
+  {% if rules %}
+    <ul class="space-y-2">
+      {% for rule in rules %}
+        <li class="flex justify-between items-center">
+          <span class="text-sm">{{ rule.rule_text }}</span>
+          <div class="space-x-2">
+            <a href="{% url 'trademind_app:edit_rule' rule.id %}" class="text-blue-400 text-sm">Edit</a>
+            <form method="post" action="{% url 'trademind_app:delete_rule' rule.id %}" style="display: inline;">
+              {% csrf_token %}
+              <button type="submit" class="text-red-400 text-sm hover:text-red-300" onclick="return confirm('Are you sure you want to delete this rule?');">
+                Delete
+              </button>
+            </form>
+          </div>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p class="text-gray-500 text-sm">No rules set. <a href="{% url 'trademind_app:add_rule' %}" class="text-emerald-400">Add one</a>.</p>
+  {% endif %}
+</div>
+
+
+<!-- CTA -->
+<div class="text-center mt-8">
+  <a href="{% url 'trademind_app:trade_log' %}" class="btn-primary">Log a Trade</a>
+</div>
+{% endblock %}
