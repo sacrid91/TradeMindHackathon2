@@ -23,7 +23,7 @@ DEBUG = os.getenv('DEBUG', 'True') == 'True'
 ALLOWED_HOSTS = [
     '127.0.0.1',
     'localhost',
-    '*.onrender.com',  # For Render deployment
+    '.onrender.com',  # For Render deployment
 ]
 
 CACHES = {
