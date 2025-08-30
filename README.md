@@ -28,8 +28,6 @@ Built for the **African fintech hackathon**, it aligns with **SDG 3 (Good Health
 ---
 
 ## 📊 AI-Powered Behavioral Insight (Hugging Face) example
-
-```json
 {
   "insight": "You maintained discipline with 5/8 rules followed, leading to a profitable trade.",
   "risk_pattern": "None",
@@ -69,3 +67,6 @@ Test mode: Use card 4242 4242 4242 4242
    python manage.py runserver
 
 7.Open in browser(Ha!Ha!Ha! Pick your poison!!!)
+
+```json
+
