@@ -141,3 +141,96 @@
       font-size: 1.1rem;
     }
   }
+
+  /* MOBILE RESPONSIVENESS: Prevent Spillage Without Changing HTML */
+@media (max-width: 600px) {
+  /* 1. Ensure all form inputs are full-width and don't overflow */
+  form input[type="text"],
+  form input[type="number"],
+  form input[type="email"],
+  form input[type="password"],
+  form textarea {
+    width: 100% !important;
+    box-sizing: border-box;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    font-size: 0.95rem;
+    min-height: 42px;
+  }
+
+  /* 2. Make textarea taller for usability */
+  form textarea {
+    min-height: 100px !important;
+    line-height: 1.5;
+  }
+
+  /* 3. Emotion Slider: Prevent label congestion */
+  .emotion-slider {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+    margin: 1rem 0;
+  }
+
+  .emotion-slider label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 0.8rem !important;
+    opacity: 0.7;
+    margin: 0.25rem;
+    width: auto !important;
+    min-width: 60px;
+    text-align: center;
+  }
+
+  .emotion-slider input[type="radio"] + label {
+    transform: scale(0.9);
+  }
+
+  .emotion-slider input[type="radio"]:checked + label {
+    opacity: 1;
+    transform: scale(1.05);
+    font-weight: bold;
+  }
+
+  /* 4. Tight spacing for form groups */
+  .card > div,
+  .card > label,
+  .card > ul {
+    margin-bottom: 0.75rem;
+  }
+
+  /* 5. Make buttons full-width on mobile */
+  .btn-primary {
+    width: 100% !important;
+    padding: 0.75rem;
+    font-size: 1.1rem;
+    margin-top: 0.5rem;
+  }
+
+  /* 6. Reduce card padding slightly for tighter fit */
+  .card {
+    padding: 1rem;
+    margin: 0.5rem;
+  }
+
+  /* 7. Ensure container doesn't exceed viewport */
+  body,
+  .max-w-md,
+  .max-w-2xl {
+    width: 100%;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* 8. Prevent text overflow in dashboard rule list */
+  .flex.items-center span,
+  .flex.justify-between span {
+    word-break: break-word;
+    font-size: 0.85rem;
+  }
+}
