@@ -45,6 +45,10 @@
           <label>{{ form.loss.label }}</label>
           {{ form.loss }}
         </div>
+        <div>
+          <label>{{ form.lot_size.label }}</label>
+          {{ form.lot_size }}
+        </div>
       </div>
 
       <!-- Emotions -->
@@ -112,6 +116,12 @@
       <div>
         <label>{{ form.reason.label }}</label>
         {{ form.reason }}
+      </div>
+
+      <div>
+        <label>{{ form.screenshot.label }}</label>
+        {{ form.screenshot }}
+        <p class="text-xs text-gray-400 mt-1">Upload a screenshot of your chart setup</p>
       </div>
 
       <button type="submit" class="btn-primary">Save Trade</button>

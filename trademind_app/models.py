@@ -116,6 +116,10 @@ class Trade(models.Model):
     reason = models.TextField(
         help_text="Why did you take this trade? What was your mindset?"
     )
+    #Optional fields
+    lot_size = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    conclusion = models.TextField(blank=True, help_text="What did you learn from this trade?")
+    screenshot = models.ImageField(upload_to='trade_screenshots/', null=True, blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     

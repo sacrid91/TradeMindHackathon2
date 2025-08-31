@@ -105,7 +105,8 @@ class TradeLogForm(forms.ModelForm):
         model = Trade
         fields = [
             'date', 'session', 'pair', 'entry', 'profit', 'loss',
-            'pre_trade_emotion', 'post_trade_emotion', 'rules_followed', 'reason'
+            'pre_trade_emotion', 'post_trade_emotion', 'rules_followed', 'reason',
+            'lot_size', 'conclusion', 'screenshot'  # ← New fields
         ]
         widgets = {
             'date': forms.DateInput(attrs={'type': 'date'}),
@@ -115,6 +116,8 @@ class TradeLogForm(forms.ModelForm):
             }),
             'profit': forms.NumberInput(attrs={'step': '0.01', 'placeholder': 'e.g., 240.50'}),
             'loss': forms.NumberInput(attrs={'step': '0.01', 'placeholder': 'e.g., 120.00'}),
+            'conclusion': forms.Textarea(attrs={'rows': 3}),
+            'lot_size': forms.NumberInput(attrs={'step': '0.01'}),
         }
         help_texts = {
             'reason': 'This is where the Psychee leaks out. Be real.',

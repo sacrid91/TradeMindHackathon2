@@ -16,7 +16,6 @@
     </ul>
   </div>
 
-
   <!-- Recent Trades -->
   <div class="card">
     <h3 class="text-xl font-bold mb-4">Recent Trades</h3>
@@ -42,49 +41,72 @@
 
 <!-- chart visuals -->
 <div class="card">
-    <h3 class="text-xl font-bold mb-4">Emotion vs. P&L($)</h3>
-    <canvas id="emotionChart" height="100"></canvas>
-  </div>
-  
-  <script>
-    const ctx = document.getElementById('emotionChart').getContext('2d');
-    
-    const data = [-120, -80, -30, 50, 200, 300];
-    const backgroundColor = data.map(value => 
-      value < 0 ? 'rgba(255, 69, 69, 0.5)' : 'rgba(57, 255, 20, 0.5)' // Red for negative, green for positive
-    );
-    const borderColor = data.map(value => 
-      value < 0 ? '#ff4545' : '#39FF14'
-    );
-  
-    new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: ['Fear', 'Angry', 'Sad', 'Neutral', 'Happy', 'Chill'],
-        datasets: [{
-          label: 'Average P&L ($)',
-          data: data,
-          backgroundColor: backgroundColor,
-          borderColor: borderColor,
-          borderWidth: 1
-        }]
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          legend: { display: false }
-        },
-        scales: {
-          y: { 
-            beginAtZero: true, 
-            grid: { color: 'rgba(255, 255, 255, 0.1)' } 
-          },
-          x: { grid: { display: false } }
+  <h3 class="text-xl font-bold mb-4">Emotion vs. P&L ($)</h3>
+  <canvas id="emotionChart" height="100"></canvas>
+</div>
+
+<script>
+// Inject dynamic data from Django
+const emotionData = {
+  {% for emotion, avg_pnl in emotion_pnl_data.items %}
+    "{{ emotion }}": {{ avg_pnl }},
+  {% endfor %}
+};
+
+const emotions = ['fear', 'angry', 'sad', 'neutral', 'happy', 'chill'];
+const labels = ['Fear', 'Angry', 'Sad', 'Neutral', 'Happy', 'Chill'];
+const data = labels.map(label => {
+  const key = label.toLowerCase();
+  return emotionData[key] !== undefined ? parseFloat(emotionData[key].toFixed(2)) : 0;
+});
+
+const backgroundColor = data.map(value => 
+  value < 0 ? 'rgba(255, 69, 69, 0.5)' : 'rgba(57, 255, 20, 0.5)'
+);
+const borderColor = data.map(value => 
+  value < 0 ? '#ff4545' : '#39FF14'
+);
+
+const ctx = document.getElementById('emotionChart').getContext('2d');
+new Chart(ctx, {
+  type: 'bar',
+  data: {
+    labels: labels,
+    datasets: [{
+      label: 'Average P&L ($)',
+      data: data,
+      backgroundColor: backgroundColor,
+      borderColor: borderColor,
+      borderWidth: 1
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          label: function(context) {
+            return `Avg P&L: $${context.parsed.y}`;
+          }
         }
       }
-    });
-  </script>
-
+    },
+    scales: {
+      y: { 
+        beginAtZero: true, 
+        grid: { color: 'rgba(255, 255, 255, 0.1)' },
+        ticks: {
+          callback: function(value) {
+            return '$' + value;
+          }
+        }
+      },
+      x: { grid: { display: false } }
+    }
+  }
+});
+</script>
 </div>  
 
 <!--Action on existing discpline checklist-->

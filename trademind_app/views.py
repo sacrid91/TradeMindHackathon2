@@ -13,6 +13,7 @@ from .forms import TraderSignupForm, TradeLogForm, StrategyRuleForm
 from .models import Trade, StrategyRule, AIInsight
 from django.conf import settings
 #from intasend import APIService
+from django.db.models import Avg, Case, When, Value, FloatField
 import os
 
 from .ai_coach import get_ai_insight,_mock_insight_on_failure #Updated import
@@ -233,3 +234,87 @@ def delete_strategy_rule(request, rule_id):
 #     request.session['dark_mode'] = not current
 #     return redirect(request.META.get('HTTP_REFERER', '/'))
 
+# trademind_app/views.py
+from django.core.paginator import Paginator
+from django.db.models import Q
+
+def trade_history(request):
+    trades = Trade.objects.filter(user=request.user).order_by('-date')
+
+    # Filters
+    pair = request.GET.get('pair')
+    session = request.GET.get('session')
+    profit = request.GET.get('profit')
+    loss = request.GET.get('loss')
+    date = request.GET.get('date')
+
+    if pair:
+        trades = trades.filter(pair__icontains=pair)
+    if session:
+        trades = trades.filter(session=session)
+    if profit:
+        trades = trades.filter(profit__gte=profit)
+    if loss:
+        trades = trades.filter(loss__gte=loss)
+    if date:
+        trades = trades.filter(date=date)
+
+    paginator = Paginator(trades, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, 'trade_history.html', {
+        'page_obj': page_obj,
+        'trades': trades,  # For balance calc
+        'filter_form': TradeLogForm(request.GET)  # Reuse form for filters
+    })
+    
+    
+    
+
+@login_required
+def dashboard(request):
+    trades = Trade.objects.filter(user=request.user).order_by('-date', '-created_at')[:5]
+    rules = StrategyRule.objects.filter(user=request.user)
+    
+    total_trades = Trade.objects.filter(user=request.user).count()
+    winning_trades = Trade.objects.filter(user=request.user, profit__isnull=False).count()
+    losing_trades = Trade.objects.filter(user=request.user, loss__isnull=False, profit__isnull=True).count()
+    
+    win_rate = 0
+    if total_trades > 0:
+        win_rate = (winning_trades / total_trades) * 100
+
+    #  Calculate average P&L by pre-trade emotion
+    emotion_pnl = Trade.objects.filter(user=request.user).values('pre_trade_emotion').annotate(
+        avg_pnl=Avg(
+            Case(
+                When(profit__isnull=False, then='profit'),
+                When(loss__isnull=False, then='loss'),
+                output_field=FloatField()
+            )
+        )
+    )
+
+    # Convert to dictionary for template
+    emotion_pnl_data = {
+        item['pre_trade_emotion']: item['avg_pnl'] or 0
+        for item in emotion_pnl
+    }
+
+    # Ensure all emotions are present
+    default_emotions = ['fear', 'angry', 'sad', 'neutral', 'happy', 'chill']
+    for emo in default_emotions:
+        if emo not in emotion_pnl_data:
+            emotion_pnl_data[emo] = 0
+
+    context = {
+        'trades': trades,
+        'rules': rules,
+        'total_trades': total_trades,
+        'winning_trades': winning_trades,
+        'losing_trades': losing_trades,
+        'win_rate': round(win_rate, 1),
+        'emotion_pnl_data': emotion_pnl_data,  # Pass to template
+    }
+    return render(request, 'dashboard.html', context)

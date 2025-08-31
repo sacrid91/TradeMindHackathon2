@@ -21,4 +21,7 @@ urlpatterns = [
     path('rule/<int:rule_id>/edit/', views.edit_strategy_rule, name='edit_rule'),
     path('rule/<int:rule_id>/delete/', views.delete_strategy_rule, name='delete_rule'),
     
+    #Trade History
+    path('trades/', views.trade_history, name='trade_history'),
+    
 ]
