@@ -140,6 +140,7 @@
       width: 15%;
       font-size: 1.1rem;
     }
+
   }
 
   /* MOBILE RESPONSIVENESS: Prevent Spillage Without Changing HTML */
@@ -232,5 +233,18 @@
   .flex.justify-between span {
     word-break: break-word;
     font-size: 0.85rem;
+  }
+
+  input[type="file"] {
+    width: 100%;
+    padding: 0.5rem 1rem;
+    background-color: #1f2937;
+    border: 1px solid #4b5563;
+    border-radius: 0.5rem;
+    color: #e2e8f0;
+    font-size: 1rem;
+    min-height: 42px;
+    max-width: 100%;
+    box-sizing: border-box;
   }
 }
