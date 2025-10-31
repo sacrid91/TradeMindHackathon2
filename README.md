@@ -7,7 +7,7 @@ TradeMind is a behavioral finance platform that helps traders **track emotions**
 Built for the **African fintech SDG**, it aligns with **SDG 3 (Good Health & Well-being)** by promoting mental resilience in trading.
 
 🌐 **Live Demo**: [https://trademindjournal.onrender.com](https://trademindjournal.onrender.com)  
-🎯 **Hackathon Ready**: Fully functional and deployed 
+🎯 **Deployment Ready**: Fully functional and deployed 
 📈 **Tech Stack**: Django, Python, Hugging Face,Deepseek(prompt Engineering)& API calls, IntaSend(Montetisation Test), Tailwind CSS(Styling)
    **Pitch deck**: https://gamma.app/docs/Untitled-k27bcsp27fll8fb
 
