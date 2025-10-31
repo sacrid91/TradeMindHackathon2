@@ -4,7 +4,7 @@
 
 TradeMind is a behavioral finance platform that helps traders **track emotions**, **enforce discipline**, and **unlock AI-powered insights** — all while integrating **real monetization via IntaSend**.
 
-Built for the **African fintech hackathon**, it aligns with **SDG 3 (Good Health & Well-being)** by promoting mental resilience in trading.
+Built for the **African fintech SDG**, it aligns with **SDG 3 (Good Health & Well-being)** by promoting mental resilience in trading.
 
 🌐 **Live Demo**: [https://trademindjournal.onrender.com](https://trademindjournal.onrender.com)  
 🎯 **Hackathon Ready**: Fully functional and deployed 
